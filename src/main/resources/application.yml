@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  application.name: forecaster
+
+weather-sources:
+  tile-radars:
+    - url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}/{z}/{x}/{y}.png?apikey=xxx
+      method: GET
+      zoom-level: 6 #The "z" part of the tile to retrieve, bigger = more accurate
+      body: ""
+      body-content-type: ""
+      templates:
+        #TODO: templating language
+        timestamp : ""
+      headers:
+        referer: "https://www.xxx.com/"
+      legend:
+        #TODO: colors legend
+        grandine: ""

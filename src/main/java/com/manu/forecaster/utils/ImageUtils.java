@@ -5,7 +5,9 @@ import java.util.*;
 
 public class ImageUtils {
 
-    public Map<String, Integer> getColorMatchCount(BufferedImage image, Map<String, String> legend, int x, int y, int searchRadius) {
+    private ImageUtils(){}
+
+    public static Map<String, Integer> getColorMatchCount(BufferedImage image, Map<String, String> legend, int x, int y, int searchRadius) {
 
         // extract an RGB array
         int size = searchRadius * 2;

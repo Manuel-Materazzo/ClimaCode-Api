@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 public class TileUtils {
 
+    private TileUtils(){}
+
     /**
      * Gets the WMS TileRapresentation of a given latitude and longitude with a certain zoom level
      *

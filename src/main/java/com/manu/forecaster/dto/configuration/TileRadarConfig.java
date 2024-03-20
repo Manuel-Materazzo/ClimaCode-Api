@@ -9,6 +9,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class TileRadarConfig {
+    private String name;
     private String url;
     private int zoomLevel;
     private String method;

@@ -11,7 +11,8 @@ spring:
 
 weather-sources:
   tile-radars:
-    - url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}/{z}/{x}/{y}.png?apikey=xxx
+    - name: xxx
+      url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}/{z}/{x}/{y}.png?apikey=xxx
       method: GET
       zoom-level: 6 #The "z" part of the tile to retrieve, bigger = more accurate
       body: ""

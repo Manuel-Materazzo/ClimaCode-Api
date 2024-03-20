@@ -70,19 +70,7 @@ public class RestService {
             throw new RestException(message);
         }
 
-        // Verifica che la risposta non sia vuota
-        ResponseBody responseBody = response.body();
-
-        String bodyString = "";
-        // controllo se c'è il body
-        try (response) {
-            if (responseBody == null) {
-                String message = "The remote server responded successfully, but returned an empty body";
-                throw new RestException(message);
-            }
-        }
-
-        return responseBody;
+        return response.body();
     }
 
     /**

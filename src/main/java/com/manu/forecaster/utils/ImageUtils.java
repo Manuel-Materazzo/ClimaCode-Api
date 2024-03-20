@@ -5,7 +5,8 @@ import java.util.*;
 
 public class ImageUtils {
 
-    private ImageUtils(){}
+    private ImageUtils() {
+    }
 
     public static Map<String, Integer> getColorMatchCount(BufferedImage image, Map<String, String> legend, int x, int y, int searchRadius) {
 
@@ -13,7 +14,7 @@ public class ImageUtils {
         int size = searchRadius * 2;
         int startx = x - searchRadius;
         int starty = y - searchRadius;
-        int[] pixelColors = image.getRGB(startx, starty, size, size, null, 0, image.getWidth());
+        int[] pixelColors = image.getRGB(startx, starty, size, size, null, 0, size);
         List<Integer> pixelColorsList = Arrays.stream(pixelColors).boxed().toList();
 
         Map<String, Integer> legendCounts = new HashMap<>();
@@ -21,11 +22,7 @@ public class ImageUtils {
         // iterate legend and count how many pixels there are with the same color as each legend entry
         for (var legendItem : legend.entrySet()) {
             // convert hex value to ARGB int
-            String hexColor = legendItem.getValue();
-            if (hexColor.startsWith("#")) {
-                hexColor = hexColor.substring(1);
-            }
-            int colorToSearch = (int) Long.parseLong(hexColor, 16);
+            int colorToSearch = hexToARGB(legendItem.getValue());
             // count the color matches into the pixel array
             int matches = Collections.frequency(pixelColorsList, colorToSearch);
             // save the counts for each legend entry on another map
@@ -33,6 +30,24 @@ public class ImageUtils {
         }
 
         return legendCounts;
+    }
+
+    private static int hexToARGB(String hexColor) {
+
+        // remove # to get only the hex
+        if (hexColor.startsWith("#")) {
+            hexColor = hexColor.substring(1);
+        }
+
+        StringBuilder hexColorBuilder = new StringBuilder(hexColor);
+
+        // pad the transparency if not provided
+        while (hexColorBuilder.length() < 8) {
+            hexColorBuilder.insert(0, "F");
+        }
+
+        hexColor = hexColorBuilder.toString();
+        return (int) Long.parseLong(hexColor, 16);
     }
 
 }

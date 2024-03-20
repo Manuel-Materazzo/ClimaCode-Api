@@ -3,6 +3,12 @@ server:
   servlet:
     context-path: /api
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger
+
 spring:
   mvc:
     pathmatch:
@@ -14,14 +20,27 @@ weather-sources:
     - name: xxx
       url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}/{z}/{x}/{y}.png?apikey=xxx
       method: GET
-      zoom-level: 6 #The "z" part of the tile to retrieve, bigger = more accurate
+      zoom-level: 6 # The "z" part of the tile to retrieve, bigger = more accurate
       body: ""
       body-content-type: ""
+      # templates it's a key-value list of SpEL expressions that get evaluated and replaced on the url and body.
+      # key: the string that gets searched to be replaced on the url/body.
+      #       for example the key "timestamp" will search and replace "{timestamp}" on the url/body with value.
+      # value: the SpEL expression that gets evaluated and put in the place of key.
       templates:
         #TODO: templating language
         timestamp : ""
       headers:
         referer: "https://www.xxx.com/"
       legend:
-        #TODO: colors legend
-        grandine: ""
+        storm-4: "#e13d54"
+        storm-3: "#d306e0"
+        storm-2: "#9c1ce0"
+        storm-1: "#6a30e0"
+        storm-0: "#4e3be0"
+        rain-4: "#0c56e0"
+        rain-3: "#0874dc"
+        rain-2: "#0a92d8"
+        rain-1: "#0ca9d4"
+        rain-0: "#0ebdd2"
+        #rain-0: "#74dbe5" # livello piu basso, si può ignorare

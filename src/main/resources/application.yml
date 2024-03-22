@@ -17,12 +17,21 @@ spring:
 
 weather-sources:
   tile-radars:
-    - name: xxx
-      url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}/{z}/{x}/{y}.png?apikey=xxx
-      method: GET
+    - name: xxx Radar
+      imagery:
+        - name: Forecast 15 minutes
+          url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}_FCST015/{z}/{x}/{y}.png?apikey=xxx
+          method: GET
+          body: ""
+          body-content-type: ""
+        - name: Forecast 30 minutes
+          url: https://maps-api-cdn.xxx.com/v1/tiles/radar_eu/{timestamp}_FCST030/{z}/{x}/{y}.png?apikey=xxx
+          method: GET
+          body: ""
+          body-content-type: ""
       zoom-level: 6 # The "z" part of the tile to retrieve, bigger = more accurate
-      body: ""
-      body-content-type: ""
+      headers:
+        referer: "https://www.xxx.com/"
       # templates it's a key-value list of SpEL expressions that get evaluated and replaced on the url and body.
       # key: the string that gets searched to be replaced on the url/body.
       #       for example the key "timestamp" will search and replace "{timestamp}" on the url/body with value.
@@ -43,4 +52,4 @@ weather-sources:
         rain-2: "#0a92d8"
         rain-1: "#0ca9d4"
         rain-0: "#0ebdd2"
-        #rain-0: "#74dbe5" # livello piu basso, si può ignorare
+        clouds: "#74dbe5"

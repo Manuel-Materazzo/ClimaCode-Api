@@ -1,5 +1,6 @@
 package com.manu.forecaster.service;
 
+import com.manu.forecaster.dto.TileForecast;
 import com.manu.forecaster.dto.TileRapresentation;
 import com.manu.forecaster.dto.configuration.TileRadarConfig;
 import com.manu.forecaster.exception.RestException;
@@ -11,6 +12,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class TileRadarService {
@@ -25,25 +28,39 @@ public class TileRadarService {
         this.spelService = spelService;
     }
 
-    public Map<String, Integer> getForecast(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {
+    public List<TileForecast> getForecasts(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {
 
-        // calculate Tile and pixel position within tile
-        TileRapresentation tile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel());
+        List<TileForecast> forecasts = new ArrayList<>();
 
-        // apply url and body templates
-        String url = spelService.applyTemplates(tileRadarConfig.getUrl(), tileRadarConfig.getTemplates(), tile);
-        String serializedBody = spelService.applyTemplates(tileRadarConfig.getBody(), tileRadarConfig.getTemplates(), tile);
+        for (var imagery : tileRadarConfig.getImagery()) {
+            // calculate Tile and pixel position within tile
+            TileRapresentation tile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel());
 
-        // get weather radar tile image
-        BufferedImage weatherRadarTileImage = getImage(
-                url, tileRadarConfig.getMethod(), tileRadarConfig.getHeaders(), serializedBody, tileRadarConfig.getBodyContentType()
-        );
+            // apply url and body templates
+            String url = spelService.applyTemplates(imagery.getUrl(), tileRadarConfig.getTemplates(), tile);
+            String serializedBody = spelService.applyTemplates(imagery.getBody(), tileRadarConfig.getTemplates(), tile);
 
-        // get how many pixels around the point of interest have matching colors with the legend
-        // pro tip: using a 5px search radius, we search on 100px, so you can read the pixel number as a coverage %
-        return ImageUtils.getColorMatchCount(
-                weatherRadarTileImage, tileRadarConfig.getLegend(), tile.getXPixel(), tile.getYPixel(), 5
-        );
+            // get weather radar tile image
+            BufferedImage weatherRadarTileImage = getImage(
+                    url, imagery.getMethod(), tileRadarConfig.getHeaders(), serializedBody, imagery.getBodyContentType()
+            );
+
+            // get how many pixels around the point of interest have matching colors with the legend
+            // pro tip: using a 5px search radius, we search on 100px, so you can read the pixel number as a coverage %
+            Map<String, Integer> forecast = ImageUtils.getColorMatchCount(
+                    weatherRadarTileImage, tileRadarConfig.getLegend(), tile.getXPixel(), tile.getYPixel(), 5
+            );
+
+            // add to the forecasts list
+            forecasts.add(
+                    TileForecast.builder()
+                            .imageryName(tileRadarConfig.getName())
+                            .forecast(forecast)
+                            .build()
+            );
+        }
+
+        return forecasts;
     }
 
     /**

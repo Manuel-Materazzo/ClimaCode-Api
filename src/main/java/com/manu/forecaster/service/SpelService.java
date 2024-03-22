@@ -27,16 +27,20 @@ public class SpelService {
      */
     public String applyTemplates(String source, Map<String, String> templates, TileRapresentation tile) {
 
+        if (source == null || source.isBlank()) {
+            return "";
+        }
+
         // replace basic tile xyz values
         if (tile != null) {
-            source = source.replace("\\{x}", String.valueOf(tile.getX()));
-            source = source.replace("\\{y}", String.valueOf(tile.getY()));
-            source = source.replace("\\{z}", String.valueOf(tile.getZ()));
+            source = source.replace("{x}", String.valueOf(tile.getX()));
+            source = source.replace("{y}", String.valueOf(tile.getY()));
+            source = source.replace("{z}", String.valueOf(tile.getZ()));
         }
 
         // replace every defined template with its parsed SpEL expression
         for (var templateEntry : templates.entrySet()) {
-            String searchString = String.format("\\{%s}", templateEntry.getKey());
+            String searchString = String.format("{%s}", templateEntry.getKey());
             source = source.replace(searchString, parseSpel(templateEntry.getValue()));
         }
 

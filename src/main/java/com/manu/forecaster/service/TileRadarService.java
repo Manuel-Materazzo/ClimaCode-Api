@@ -54,7 +54,7 @@ public class TileRadarService {
             // add to the forecasts list
             forecasts.add(
                     TileForecast.builder()
-                            .imageryName(tileRadarConfig.getName())
+                            .imageryName(imagery.getName())
                             .forecast(forecast)
                             .build()
             );

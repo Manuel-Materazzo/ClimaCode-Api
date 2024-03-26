@@ -9,7 +9,6 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TileForecast {
-    private String imageryName;
-    private Map<String, Integer> weatherCoinditions;
+public class WeatherMatchedForecast {
+    private Map<String, ForecastMatch> matches;
 }

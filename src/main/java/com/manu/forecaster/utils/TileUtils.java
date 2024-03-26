@@ -16,7 +16,7 @@ public class TileUtils {
      * @param zoom
      * @return
      */
-    public static TileRapresentation latlongToTile(BigDecimal latitude, BigDecimal longitude, int zoom) {
+    public static TileRapresentation latlongToTile(BigDecimal latitude, BigDecimal longitude, int zoom, int tileSize) {
         // scale = 2^zoom, using shift operator is more efficient
         int scale = 1 << zoom;
         double x = scale * (longitude.doubleValue() + 180) / 360;
@@ -27,8 +27,8 @@ public class TileUtils {
         int ytile = (int) y;
 
         // Get the pixel index within the tile
-        int xpixel = (int) ((x - xtile) * 256);
-        int ypixel = (int) ((y - ytile) * 256);
+        int xpixel = (int) ((x - xtile) * tileSize);
+        int ypixel = (int) ((y - ytile) * tileSize);
 
         return TileRapresentation.builder()
                 .x(xtile)

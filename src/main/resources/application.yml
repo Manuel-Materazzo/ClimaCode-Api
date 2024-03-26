@@ -16,7 +16,7 @@ spring:
   application.name: forecaster
 
 weather-sources:
-  base-map-url: https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png
+  base-map-url: https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png
   tile-radars:
     - name: xxx Radar
       imagery:

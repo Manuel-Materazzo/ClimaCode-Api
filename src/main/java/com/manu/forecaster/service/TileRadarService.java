@@ -40,7 +40,7 @@ public class TileRadarService {
 
         for (var imagery : tileRadarConfig.getImagery()) {
             // calculate Tile and pixel position within tile
-            TileRapresentation tile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel());
+            TileRapresentation tile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel(), 512);
 
             // apply url and body templates
             String url = spelService.applyTemplates(imagery.getUrl(), tileRadarConfig.getTemplates(), tile);
@@ -61,7 +61,7 @@ public class TileRadarService {
             forecasts.add(
                     TileForecast.builder()
                             .imageryName(imagery.getName())
-                            .forecast(forecast)
+                            .weatherCoinditions(forecast)
                             .build()
             );
         }

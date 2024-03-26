@@ -12,5 +12,6 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "weather-sources")
 public class WeatherSourcesConfig {
+    private String baseMapUrl;
     private List<TileRadarConfig> tileRadars;
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TileForecastSource {
+public class ForecastSource {
     private String sourceName;
-    private List<TileForecast> forecast;
+    private List<Forecast> forecast;
 }

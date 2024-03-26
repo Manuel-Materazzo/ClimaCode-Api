@@ -9,6 +9,6 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeatherMatchedForecast {
+public class WeatherMatchedNowcast {
     private Map<String, ForecastMatch> matches;
 }

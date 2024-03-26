@@ -33,14 +33,14 @@ public class NowcastService {
 
     }
 
-    public RawForecast getForecastsRaw(String latitude, String longitude) {
+    public RawNowcast getForecastsRaw(String latitude, String longitude) {
 
-        ArrayList<TileForecastSource> sources = new ArrayList<>();
+        ArrayList<ForecastSource> sources = new ArrayList<>();
 
         try {
             for (var tileRadarService : tileRadarServices) {
-                List<TileForecast> forecast = tileRadarService.getForecasts(new BigDecimal(latitude), new BigDecimal(longitude));
-                TileForecastSource forecastSource = TileForecastSource.builder()
+                List<Forecast> forecast = tileRadarService.getForecasts(new BigDecimal(latitude), new BigDecimal(longitude));
+                ForecastSource forecastSource = ForecastSource.builder()
                         .sourceName(tileRadarService.getName())
                         .forecast(forecast)
                         .build();
@@ -50,20 +50,20 @@ public class NowcastService {
             throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
         }
 
-        return RawForecast.builder()
+        return RawNowcast.builder()
                 .sources(sources)
                 .build();
     }
 
-    public WeatherMatchedForecast getForecastsMatch(String latitude, String longitude, List<String> weatherTypes) {
+    public WeatherMatchedNowcast getForecastsMatch(String latitude, String longitude, List<String> weatherTypes) {
 
         Map<String, ForecastMatch> matches = initializeMatchesMap(weatherTypes);
 
-        List<TileForecastSource> forecastSources = getForecastsRaw(latitude, longitude).getSources();
+        List<ForecastSource> forecastSources = getForecastsRaw(latitude, longitude).getSources();
 
         // for every weather radar source
         for (var source : forecastSources) {
-            List<TileForecast> forecasts = source.getForecast();
+            List<Forecast> forecasts = source.getForecast();
             // for every forecast tileset
             for (var forecast : forecasts) {
                 // iterate the weather types to check
@@ -80,7 +80,7 @@ public class NowcastService {
             }
         }
 
-        return WeatherMatchedForecast.builder()
+        return WeatherMatchedNowcast.builder()
                 .matches(matches)
                 .build();
     }

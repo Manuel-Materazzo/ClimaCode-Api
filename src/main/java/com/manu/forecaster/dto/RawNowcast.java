@@ -9,6 +9,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RawForecast {
-    private List<TileForecastSource> sources;
+public class RawNowcast {
+    private List<ForecastSource> sources;
 }

@@ -1,8 +1,7 @@
 package com.manu.forecaster.utils;
 
-import com.manu.forecaster.dto.TileBoundary;
+import com.manu.forecaster.dto.tile.TileBoundary;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;

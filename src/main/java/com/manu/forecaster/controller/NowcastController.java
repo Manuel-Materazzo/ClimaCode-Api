@@ -1,7 +1,7 @@
 package com.manu.forecaster.controller;
 
-import com.manu.forecaster.dto.RawForecast;
-import com.manu.forecaster.dto.WeatherMatchedForecast;
+import com.manu.forecaster.dto.RawNowcast;
+import com.manu.forecaster.dto.WeatherMatchedNowcast;
 import com.manu.forecaster.service.NowcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,13 +30,13 @@ public class NowcastController {
 
 
     @GetMapping({"/raw"})
-    public ResponseEntity<RawForecast> raw(@RequestParam String latitude, @RequestParam String longitude) {
+    public ResponseEntity<RawNowcast> raw(@RequestParam String latitude, @RequestParam String longitude) {
         return ResponseEntity.ok(nowcastService.getForecastsRaw(latitude, longitude));
     }
 
     @GetMapping({"/weatherMatch"})
-    public ResponseEntity<WeatherMatchedForecast> weatherMatch(@RequestParam String latitude, @RequestParam String longitude,
-                                                               @RequestParam List<String> weatherTypes) {
+    public ResponseEntity<WeatherMatchedNowcast> weatherMatch(@RequestParam String latitude, @RequestParam String longitude,
+                                                              @RequestParam List<String> weatherTypes) {
         return ResponseEntity.ok(nowcastService.getForecastsMatch(latitude, longitude, weatherTypes));
     }
 

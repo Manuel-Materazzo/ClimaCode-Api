@@ -1,6 +1,6 @@
 package com.manu.forecaster.service;
 
-import com.manu.forecaster.dto.TileRapresentation;
+import com.manu.forecaster.dto.tile.TileRapresentation;
 import org.springframework.context.annotation.Scope;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;

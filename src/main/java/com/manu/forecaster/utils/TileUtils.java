@@ -1,6 +1,6 @@
 package com.manu.forecaster.utils;
 
-import com.manu.forecaster.dto.TileRapresentation;
+import com.manu.forecaster.dto.tile.TileRapresentation;
 
 import java.math.BigDecimal;
 

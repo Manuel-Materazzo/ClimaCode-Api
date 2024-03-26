@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ForecastMatch {
-    private boolean matched;
+    private boolean pointMatched;
+    private boolean areaMatched;
     private List<String> matchedForecasts;
 }

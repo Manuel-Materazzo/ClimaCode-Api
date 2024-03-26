@@ -57,11 +57,14 @@ public class TileRadarService {
                     weatherRadarTileImage, tileRadarConfig.getLegend(), tile.getXPixel(), tile.getYPixel(), 5
             );
 
+            String pointWeather = ImageUtils.getWeatherMatchByColor(weatherRadarTileImage, tileRadarConfig.getLegend(), tile.getXPixel(), tile.getYPixel());
+
             // add to the forecasts list
             forecasts.add(
                     Forecast.builder()
                             .imageryName(imagery.getName())
-                            .weatherCoinditions(forecast)
+                            .pointWeatherCondition(pointWeather)
+                            .areaWeatherCoinditions(forecast)
                             .build()
             );
         }

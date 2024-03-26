@@ -47,6 +47,25 @@ public class ImageUtils {
         return legendCounts;
     }
 
+
+    public static String getWeatherMatchByColor(BufferedImage image, Map<String, String> legend, int x, int y) {
+
+        int pixelColor = image.getRGB(x, y);
+
+        // iterate legend to search the corresponding pixel color
+        for (var legendItem : legend.entrySet()) {
+            // convert hex value to ARGB int
+            int colorToSearch = hexToARGB(legendItem.getValue());
+            // if the color matches, return it
+            if(colorToSearch == pixelColor){
+                return legendItem.getKey();
+            }
+        }
+
+        // if nothing matches, the weather is clear
+        return "clear";
+    }
+
     public static BufferedImage drawSquare(BufferedImage image, int centroidX, int centroidY, int radius) {
 
         int size = radius * 2 + 1;

@@ -11,5 +11,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class Forecast {
     private String imageryName;
-    private Map<String, Integer> weatherCoinditions;
+    private String pointWeatherCondition;
+    private Map<String, Integer> areaWeatherCoinditions;
 }

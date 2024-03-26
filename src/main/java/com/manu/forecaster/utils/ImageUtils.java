@@ -48,6 +48,62 @@ public class ImageUtils {
         return legendCounts;
     }
 
+    public static BufferedImage drawSquare(BufferedImage image, int centroidX, int centroidY, int radius) {
+
+        int size = radius * 2 + 1;
+        int startx = centroidX - radius;
+        int starty = centroidY - radius;
+
+        Graphics2D graph = image.createGraphics();
+        graph.setColor(Color.BLACK);
+        graph.drawRect(startx, starty, size, size);
+        graph.dispose();
+
+        return image;
+    }
+
+    /**
+     * Sets the opacity of the overlayImage to the value provided and draws it on top of the baseImage
+     * @param baseImage image at full opacity
+     * @param overlayImage image with reduced opacity to overlay
+     * @param opacity opacity of overlayImage
+     * @return BufferedImage of overlapped images
+     */
+    public static BufferedImage overlayImage(BufferedImage baseImage, BufferedImage overlayImage, float opacity) {
+
+        Graphics2D g = baseImage.createGraphics();
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity);
+
+        g.drawImage(overlayImage, 0, 0, null);
+        g.setComposite(ac);
+
+        g.dispose();
+        return baseImage;
+    }
+
+    /**
+     * Crops the source image to the provided boundary and scales is
+     * @param source image to crop
+     * @param boundary boundaries for crop
+     * @param scale scale of the output image
+     * @return the source image, cropped and scaled
+     */
+    public BufferedImage cropAndScale(BufferedImage source, TileBoundary boundary, double scale) {
+
+        int width = boundary.getBottomRightXPixel() - boundary.getTopLeftXPixel();
+        int height = boundary.getBottomRightYPixel() - boundary.getTopLeftYPixel();
+
+        // crop
+        BufferedImage cropped = source.getSubimage(boundary.getTopLeftXPixel(), boundary.getTopLeftYPixel(), width, height);
+
+        // scale
+        BufferedImage after = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        AffineTransform at = new AffineTransform();
+        at.scale(scale, scale);
+        AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+        return scaleOp.filter(cropped, after);
+    }
+
     private static int hexToARGB(String hexColor) {
 
         // remove # to get only the hex

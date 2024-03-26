@@ -1,13 +1,29 @@
 package com.manu.forecaster.utils;
 
+import com.manu.forecaster.dto.TileBoundary;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.List;
 
 public class ImageUtils {
 
     private ImageUtils() {
     }
 
+    /**
+     * Extracts how many pixel in the source image within the search radius match the colors described in the legend
+     * @param image source image for the match
+     * @param legend map of names and hex colors to match
+     * @param x x pixel of the search point
+     * @param y y pixel of the search point
+     * @param searchRadius pixels of search radius
+     * @return a map containing the names of the legend, and the amount of matched pixels
+     */
     public static Map<String, Integer> getColorMatchCount(BufferedImage image, Map<String, String> legend, int x, int y, int searchRadius) {
 
         // extract an RGB array

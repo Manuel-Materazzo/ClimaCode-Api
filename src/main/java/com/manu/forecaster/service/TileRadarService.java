@@ -21,11 +21,17 @@ public class TileRadarService {
     private final TileRadarConfig tileRadarConfig;
     private final RestService restService;
     private final SpelService spelService;
+    private final String baseMapUrl;
 
-    public TileRadarService(TileRadarConfig tileRadarConfig, RestService restService, SpelService spelService) {
+    public TileRadarService(TileRadarConfig tileRadarConfig, RestService restService, SpelService spelService, String baseMapUrl) {
         this.tileRadarConfig = tileRadarConfig;
         this.restService = restService;
         this.spelService = spelService;
+        this.baseMapUrl = baseMapUrl;
+    }
+
+    public String getName() {
+        return tileRadarConfig.getName();
     }
 
     public List<TileForecast> getForecasts(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {

@@ -33,7 +33,7 @@ public class NowcastService {
 
     }
 
-    public RawNowcast getForecastsRaw(String latitude, String longitude) {
+    public RawNowcast getNowcastsRaw(String latitude, String longitude) {
 
         ArrayList<NowcastSource> sources = new ArrayList<>();
 
@@ -55,11 +55,11 @@ public class NowcastService {
                 .build();
     }
 
-    public WeatherMatchedNowcast getForecastsMatch(String latitude, String longitude, List<String> weatherTypes) {
+    public WeatherMatchedNowcast getNowcastsMatch(String latitude, String longitude, List<String> weatherTypes) {
 
         Map<String, NowcastMatch> matches = initializeMatchesMap(weatherTypes);
 
-        List<NowcastSource> nowcastSources = getForecastsRaw(latitude, longitude).getSources();
+        List<NowcastSource> nowcastSources = getNowcastsRaw(latitude, longitude).getSources();
 
         // for every weather radar source
         for (var source : nowcastSources) {

@@ -31,13 +31,13 @@ public class NowcastController {
 
     @GetMapping({"/raw"})
     public ResponseEntity<RawNowcast> raw(@RequestParam String latitude, @RequestParam String longitude) {
-        return ResponseEntity.ok(nowcastService.getForecastsRaw(latitude, longitude));
+        return ResponseEntity.ok(nowcastService.getNowcastsRaw(latitude, longitude));
     }
 
     @GetMapping({"/weatherMatch"})
     public ResponseEntity<WeatherMatchedNowcast> weatherMatch(@RequestParam String latitude, @RequestParam String longitude,
                                                               @RequestParam List<String> weatherTypes) {
-        return ResponseEntity.ok(nowcastService.getForecastsMatch(latitude, longitude, weatherTypes));
+        return ResponseEntity.ok(nowcastService.getNowcastsMatch(latitude, longitude, weatherTypes));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.manu.forecaster.dto;
+package com.manu.forecaster.dto.nowcast;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Forecast {
+public class Nowcast {
     private String imageryName;
     private String pointWeatherCondition;
     private Map<String, Integer> areaWeatherCoinditions;

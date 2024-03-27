@@ -1,7 +1,7 @@
 package com.manu.forecaster.controller;
 
-import com.manu.forecaster.dto.RawNowcast;
-import com.manu.forecaster.dto.WeatherMatchedNowcast;
+import com.manu.forecaster.dto.nowcast.RawNowcast;
+import com.manu.forecaster.dto.nowcast.WeatherMatchedNowcast;
 import com.manu.forecaster.service.NowcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

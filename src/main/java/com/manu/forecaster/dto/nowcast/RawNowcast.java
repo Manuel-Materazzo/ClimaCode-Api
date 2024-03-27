@@ -1,4 +1,4 @@
-package com.manu.forecaster.dto;
+package com.manu.forecaster.dto.nowcast;
 
 import lombok.*;
 
@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RawNowcast {
-    private List<ForecastSource> sources;
+    private List<NowcastSource> sources;
 }

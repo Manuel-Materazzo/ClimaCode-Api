@@ -1,4 +1,4 @@
-package com.manu.forecaster.dto;
+package com.manu.forecaster.dto.nowcast;
 
 import lombok.*;
 
@@ -10,5 +10,5 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WeatherMatchedNowcast {
-    private Map<String, ForecastMatch> matches;
+    private Map<String, NowcastMatch> matches;
 }

@@ -1,6 +1,6 @@
 package com.manu.forecaster.service;
 
-import com.manu.forecaster.dto.Forecast;
+import com.manu.forecaster.dto.nowcast.Nowcast;
 import com.manu.forecaster.dto.tile.TileRapresentation;
 import com.manu.forecaster.dto.configuration.TileRadarConfig;
 import com.manu.forecaster.exception.RestException;
@@ -34,9 +34,9 @@ public class TileRadarService {
         return tileRadarConfig.getName();
     }
 
-    public List<Forecast> getForecasts(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {
+    public List<Nowcast> getForecasts(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {
 
-        List<Forecast> forecasts = new ArrayList<>();
+        List<Nowcast> forecasts = new ArrayList<>();
 
         for (var imagery : tileRadarConfig.getImagery()) {
             // calculate Tile and pixel position within tile
@@ -61,7 +61,7 @@ public class TileRadarService {
 
             // add to the forecasts list
             forecasts.add(
-                    Forecast.builder()
+                    Nowcast.builder()
                             .imageryName(imagery.getName())
                             .pointWeatherCondition(pointWeather)
                             .areaWeatherCoinditions(forecast)

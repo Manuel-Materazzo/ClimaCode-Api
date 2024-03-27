@@ -1,4 +1,4 @@
-package com.manu.forecaster.dto;
+package com.manu.forecaster.dto.nowcast;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForecastMatch {
+public class NowcastMatch {
     private boolean pointMatched;
     private boolean areaMatched;
     private List<String> matchedForecasts;

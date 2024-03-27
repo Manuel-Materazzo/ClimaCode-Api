@@ -1,4 +1,4 @@
-package com.manu.forecaster.dto;
+package com.manu.forecaster.dto.nowcast;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForecastSource {
+public class NowcastSource {
     private String sourceName;
-    private List<Forecast> forecast;
+    private List<Nowcast> nowcast;
 }

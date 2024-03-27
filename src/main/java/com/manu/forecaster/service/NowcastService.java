@@ -1,7 +1,7 @@
 package com.manu.forecaster.service;
 
-import com.manu.forecaster.dto.*;
 import com.manu.forecaster.dto.configuration.WeatherSourcesConfig;
+import com.manu.forecaster.dto.nowcast.*;
 import com.manu.forecaster.exception.GeneralDataException;
 import com.manu.forecaster.exception.RestException;
 import com.manu.forecaster.utils.GeneralUtils;
@@ -35,16 +35,16 @@ public class NowcastService {
 
     public RawNowcast getForecastsRaw(String latitude, String longitude) {
 
-        ArrayList<ForecastSource> sources = new ArrayList<>();
+        ArrayList<NowcastSource> sources = new ArrayList<>();
 
         try {
             for (var tileRadarService : tileRadarServices) {
-                List<Forecast> forecast = tileRadarService.getForecasts(new BigDecimal(latitude), new BigDecimal(longitude));
-                ForecastSource forecastSource = ForecastSource.builder()
+                List<Nowcast> nowcast = tileRadarService.getForecasts(new BigDecimal(latitude), new BigDecimal(longitude));
+                NowcastSource nowcastSource = NowcastSource.builder()
                         .sourceName(tileRadarService.getName())
-                        .forecast(forecast)
+                        .nowcast(nowcast)
                         .build();
-                sources.add(forecastSource);
+                sources.add(nowcastSource);
             }
         } catch (RestException | IOException e) {
             throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
@@ -57,15 +57,15 @@ public class NowcastService {
 
     public WeatherMatchedNowcast getForecastsMatch(String latitude, String longitude, List<String> weatherTypes) {
 
-        Map<String, ForecastMatch> matches = initializeMatchesMap(weatherTypes);
+        Map<String, NowcastMatch> matches = initializeMatchesMap(weatherTypes);
 
-        List<ForecastSource> forecastSources = getForecastsRaw(latitude, longitude).getSources();
+        List<NowcastSource> nowcastSources = getForecastsRaw(latitude, longitude).getSources();
 
         // for every weather radar source
-        for (var source : forecastSources) {
-            List<Forecast> forecasts = source.getForecast();
+        for (var source : nowcastSources) {
+            List<Nowcast> nowcasts = source.getNowcast();
             // for every forecast tileset
-            for (var forecast : forecasts) {
+            for (var forecast : nowcasts) {
                 // iterate the weather types to check
                 for (var weatherType : weatherTypes) {
                     // if the weather types are contained inside the forecast
@@ -89,11 +89,11 @@ public class NowcastService {
                 .build();
     }
 
-    private Map<String, ForecastMatch> initializeMatchesMap(List<String> weatherTypes) {
-        Map<String, ForecastMatch> map = new HashMap<>();
+    private Map<String, NowcastMatch> initializeMatchesMap(List<String> weatherTypes) {
+        Map<String, NowcastMatch> map = new HashMap<>();
 
         for (var weatherType : weatherTypes) {
-            ForecastMatch forecastMatch = ForecastMatch.builder()
+            NowcastMatch forecastMatch = NowcastMatch.builder()
                     .areaMatched(false)
                     .matchedForecasts(new ArrayList<>())
                     .build();

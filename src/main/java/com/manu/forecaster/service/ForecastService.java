@@ -5,6 +5,7 @@ import com.manu.forecaster.dto.configuration.WeatherSourcesConfig;
 import com.manu.forecaster.dto.configuration.WebScraperConfig;
 import com.manu.forecaster.dto.forecast.*;
 import com.manu.forecaster.service.scrape.MeteblueScrapeService;
+import com.manu.forecaster.service.scrape.MeteocielScrapeService;
 import com.manu.forecaster.service.scrape.ScrapeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -53,7 +54,7 @@ public class ForecastService {
 
         List<ForecastSource> forecastSources = getForecastRaw(latitude, longitude, timeframe).getSources();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm")
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 .withZone(ZoneId.systemDefault());
 
         // for every forecast source
@@ -95,6 +96,12 @@ public class ForecastService {
         if (meteoblueConfig.isEnabled()) {
             ScrapeService meteoblueScraper = new MeteblueScrapeService(userAgent, meteoblueConfig);
             scrapeServices.add(meteoblueScraper);
+        }
+
+        WebScraperConfig meteocielConfig = weatherSourcesConfig.getWebScrapers().getMeteociel();
+        if (meteocielConfig.isEnabled()) {
+            ScrapeService meteocielScraper = new MeteocielScrapeService(userAgent, meteocielConfig);
+            scrapeServices.add(meteocielScraper);
         }
 
         return scrapeServices;

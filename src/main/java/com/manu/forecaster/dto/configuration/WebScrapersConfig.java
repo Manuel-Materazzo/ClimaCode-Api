@@ -8,4 +8,5 @@ import lombok.Setter;
 public class WebScrapersConfig {
     private String userAgent;
     private WebScraperConfig meteoblue;
+    private WebScraperConfig meteociel;
 }

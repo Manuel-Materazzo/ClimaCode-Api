@@ -102,5 +102,30 @@ weather-sources:
         "[Light rain, thunderstorms likely]": storm-0
         "[Rain, thunderstorms likely]": storm-1
         "[Heavy rain, thunderstorms likely]": storm-2
-        "[Storm with heavy snow]": snow-3
-
+        "[Storm with heavy snow]": storm-3
+    meteociel:
+      enabled: true
+      forecasts:
+        - name: Forecast GFS
+          url: https://www.meteociel.fr/previsions/xxxxx/xxx.htm
+          timeframe: MULTIPLE_DAYS
+      legend:
+        # the actual value is surrounded with square brakets to preserve spaces and special characters
+        "[Ensoleillé]": clear
+        "[Ciel clair]": clear #
+        "[Voilé]": clear #
+        "[Peu nuageux]": clear #
+        "[Brumeux ou brouillard]": cloudy #
+        "[Mitigé]": cloudy #
+        "[Nuageux]": cloudy
+        "[Couvert]": cloudy #
+        "[Pluie faible]": rain-0 #
+        "[Pluie forte]": rain-1
+        "[Pluie]": rain-2
+        "[Averses de neige]": snow-0
+        "[Pluie et neige mêlées]": snow-1
+        "[Averse de pluie et neige mêlées]": snow-1
+        "[Neige]": snow-2
+        "[Risque d'orage faible]": storm-1
+        "[Risque d'orage fort]": storm-2
+        "[Risque de chute de grêles]": hail

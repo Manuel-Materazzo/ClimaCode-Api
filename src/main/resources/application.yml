@@ -17,6 +17,7 @@ spring:
 
 weather-sources:
   base-map-url: https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png
+  user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
   tile-radars:
     - name: xxx Radar
       imagery:
@@ -38,10 +39,7 @@ weather-sources:
       #       for example the key "timestamp" will search and replace "{timestamp}" on the url/body with value.
       # value: the SpEL expression that gets evaluated and put in the place of key.
       templates:
-        #TODO: templating language
         timestamp : ""
-      headers:
-        referer: "https://www.xxx.com/"
       legend:
         storm-4: "#e13d54"
         storm-3: "#d306e0"
@@ -53,4 +51,54 @@ weather-sources:
         rain-2: "#0a92d8"
         rain-1: "#0ca9d4"
         rain-0: "#0ebdd2"
-        clouds: "#74dbe5"
+        cloudy: "#74dbe5"
+
+  web-scrapers:
+    user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+    meteoblue:
+      enabled: true
+      forecasts:
+        - name: Forecast Today
+          url: https://www.meteoblue.com/en/weather/week/{longitude}N{latitude}E
+          timeframe:  TODAY
+        - name: Forecast Tomorrow
+          url: https://www.meteoblue.com/en/weather/week/{longitude}N{latitude}E?day=2
+          timeframe: TOMORROW
+      legend:
+        # the actual value is surrounded with square brakets to preserve spaces and special characters
+        "[Clear, cloudless sky]": clear
+        "[Clear, few cirrus]": clear
+        "[Clear with cirrus]": clear
+        "[Clear with few low clouds]": clear
+        "[Clear with few low clouds and few cirrus]": clear
+        "[Clear with few low clouds and cirrus]": clear
+        "[Clear but hazy]": clear
+        "[Clear but hazy with few cirrus]": clear
+        "[Clear but hazy with cirrus]": clear
+        "[Partly cloudy]": cloudy
+        "[Partly cloudy and few cirrus]": cloudy
+        "[Partly cloudy and cirrus]": cloudy
+        "[Fog/low stratus clouds]": cloudy
+        "[Mixed with some thunderstorm clouds possible]": cloudy
+        "[Mixed with few cirrus with some thunderstorm clouds possible]": cloudy
+        "[Mixed with cirrus and some thunderstorm clouds possible]": cloudy
+        "[Fog/low stratus clouds with few cirrus]": cloudy
+        "[Fog/low stratus clouds with cirrus]": cloudy
+        "[Mostly cloudy]": cloudy
+        "[Mostly cloudy and few cirrus]": cloudy
+        "[Mostly cloudy and cirrus]": cloudy
+        "[Overcast]": cloudy
+        "[Mixed with snow showers]": snow-0
+        "[Overcast with light snow]": snow-1
+        "[Overcast with mixture of snow and rain]": snow-1
+        "[Overcast with snow]": snow-2
+        "[Overcast with heavy snow]": snow-3
+        "[Mixed with showers]": rain-0
+        "[Overcast with light rain]": rain-1
+        "[Overcast with rain]": rain-2
+        "[Overcast with heavy rain]": rain-3
+        "[Light rain, thunderstorms likely]": storm-0
+        "[Rain, thunderstorms likely]": storm-1
+        "[Heavy rain, thunderstorms likely]": storm-2
+        "[Storm with heavy snow]": snow-3
+

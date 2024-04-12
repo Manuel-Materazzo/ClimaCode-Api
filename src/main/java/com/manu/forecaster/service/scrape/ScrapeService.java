@@ -1,7 +1,6 @@
 package com.manu.forecaster.service.scrape;
 
 import com.manu.forecaster.constant.Timeframe;
-import com.manu.forecaster.dto.forecast.ForecastSource;
 import com.manu.forecaster.dto.configuration.WebScraperConfig;
 import com.manu.forecaster.dto.configuration.WebScraperForecastsConfig;
 import com.manu.forecaster.exception.GeneralDataException;
@@ -21,8 +20,6 @@ public abstract class ScrapeService implements GenericForecastServiceInterface {
         this.userAgent = userAgent;
         this.config = config;
     }
-
-    public abstract ForecastSource getForecasts(Timeframe timeframe, String latitude, String longitude);
 
     /**
      * Scrapes the document at the provided url
@@ -45,19 +42,42 @@ public abstract class ScrapeService implements GenericForecastServiceInterface {
     }
 
     protected WebScraperForecastsConfig forecastConfigFactory(Timeframe timeframe, String latitude, String longitude) {
+
+        WebScraperForecastsConfig configInstance = getWebScraperForecastsConfig(timeframe);
+
+        // if there is no match for the timeframe, nor generic timeframes
+        if (configInstance == null) {
+            String message = String.format("The forecast for the timeframe %s is not defined", timeframe.toString());
+            throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, message);
+        }
+
+        // replace url placeholders
+        String url = configInstance.getUrl();
+        url = url.replace("{latitude}", latitude);
+        url = url.replace("{longitude}", longitude);
+
+        // instantiate a new config using the wither to replace the url
+        return configInstance.withUrl(url);
+    }
+
+    private WebScraperForecastsConfig getWebScraperForecastsConfig(Timeframe timeframe) {
+        WebScraperForecastsConfig configInstance = null;
+        WebScraperForecastsConfig multiTimeframeConfigInstance = null;
+
+        // search a forecast for the specified timeframe and a forecast for all timeframes
         for (var forecast : config.getForecasts()) {
             if (forecast.getTimeframe() == timeframe) {
-                // replace url placeholders
-                String url = forecast.getUrl();
-                url = url.replace("{latitude}", latitude);
-                url = url.replace("{longitude}", longitude);
-
-                // instantiate a new config using the wither to replace the url
-                return forecast.withUrl(url);
+                configInstance = forecast;
+            }
+            if (forecast.getTimeframe() == Timeframe.MULTIPLE_DAYS) {
+                multiTimeframeConfigInstance = forecast;
             }
         }
 
-        String message = String.format("The forecast for the timeframe %s is not defined", timeframe.toString());
-        throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, message);
+        // if there is no a precise match for the timeframe, use the generic one
+        if (configInstance == null) {
+            configInstance = multiTimeframeConfigInstance;
+        }
+        return configInstance;
     }
 }

@@ -8,5 +8,6 @@ public enum Timeframe {
     IN_4_DAYS,
     IN_5_DAYS,
     IN_6_DAYS,
-    IN_7_DAYS
+    IN_7_DAYS,
+    MULTIPLE_DAYS
 }

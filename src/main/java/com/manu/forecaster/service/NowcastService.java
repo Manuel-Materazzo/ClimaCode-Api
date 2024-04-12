@@ -64,19 +64,19 @@ public class NowcastService {
         // for every weather radar source
         for (var source : nowcastSources) {
             List<Nowcast> nowcasts = source.getNowcast();
-            // for every forecast tileset
-            for (var forecast : nowcasts) {
+            // for every nowcast tileset
+            for (var nowcast : nowcasts) {
                 // iterate the weather types to check
                 for (var weatherType : weatherTypes) {
                     // if the weather types are contained inside the forecast
-                    if (GeneralUtils.mapContainsLike(forecast.getAreaWeatherCoinditions(), weatherType)) {
+                    if (GeneralUtils.mapContainsLike(nowcast.getAreaWeatherCoinditions(), weatherType)) {
                         // add set match into the map
                         var match = matches.get(weatherType);
                         match.setAreaMatched(true);
-                        String matchName = String.format("%s - %s", source.getSourceName(), forecast.getImageryName());
+                        String matchName = String.format("%s - %s", source.getSourceName(), nowcast.getImageryName());
                         match.getMatchedForecasts().add(matchName);
                         // if the point weather matches the weather type, it's a point match
-                        if (forecast.getPointWeatherCondition().contains(weatherType)) {
+                        if (nowcast.getPointWeatherCondition().contains(weatherType)) {
                             match.setPointMatched(true);
                         }
                     }
@@ -95,6 +95,7 @@ public class NowcastService {
         for (var weatherType : weatherTypes) {
             NowcastMatch forecastMatch = NowcastMatch.builder()
                     .areaMatched(false)
+                    .pointMatched(false)
                     .matchedForecasts(new ArrayList<>())
                     .build();
             map.put(weatherType, forecastMatch);

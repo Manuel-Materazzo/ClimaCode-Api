@@ -1,17 +1,18 @@
 package com.manu.forecaster.service.scrape;
 
 import com.manu.forecaster.constant.Timeframe;
-import com.manu.forecaster.dto.ForecastSource;
+import com.manu.forecaster.dto.forecast.ForecastSource;
 import com.manu.forecaster.dto.configuration.WebScraperConfig;
 import com.manu.forecaster.dto.configuration.WebScraperForecastsConfig;
 import com.manu.forecaster.exception.GeneralDataException;
+import com.manu.forecaster.service.GenericForecastServiceInterface;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
-public abstract class ScrapeService {
+public abstract class ScrapeService implements GenericForecastServiceInterface {
 
     protected final String userAgent;
     protected final WebScraperConfig config;
@@ -21,7 +22,7 @@ public abstract class ScrapeService {
         this.config = config;
     }
 
-    public abstract ForecastSource getForecasts(Timeframe timeframe);
+    public abstract ForecastSource getForecasts(Timeframe timeframe, String latitude, String longitude);
 
     /**
      * Scrapes the document at the provided url
@@ -43,10 +44,16 @@ public abstract class ScrapeService {
         return document;
     }
 
-    protected WebScraperForecastsConfig forecastConfigFactory(Timeframe timeframe) {
+    protected WebScraperForecastsConfig forecastConfigFactory(Timeframe timeframe, String latitude, String longitude) {
         for (var forecast : config.getForecasts()) {
             if (forecast.getTimeframe() == timeframe) {
-                return forecast;
+                // replace url placeholders
+                String url = forecast.getUrl();
+                url = url.replace("{latitude}", latitude);
+                url = url.replace("{longitude}", longitude);
+
+                // instantiate a new config using the wither to replace the url
+                return forecast.withUrl(url);
             }
         }
 

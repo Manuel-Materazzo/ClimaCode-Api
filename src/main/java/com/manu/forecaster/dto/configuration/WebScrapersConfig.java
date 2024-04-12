@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WebScrapersConfig {
+    private String userAgent;
     private WebScraperConfig meteoblue;
-    private String diocane;
 }

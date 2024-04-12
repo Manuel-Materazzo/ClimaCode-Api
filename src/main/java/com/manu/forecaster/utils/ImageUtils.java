@@ -37,11 +37,11 @@ public class ImageUtils {
         // iterate legend and count how many pixels there are with the same color as each legend entry
         for (var legendItem : legend.entrySet()) {
             // convert hex value to ARGB int
-            int colorToSearch = hexToARGB(legendItem.getValue());
+            int colorToSearch = hexToARGB(legendItem.getKey());
             // count the color matches into the pixel array
             int matches = Collections.frequency(pixelColorsList, colorToSearch);
             // save the counts for each legend entry on another map
-            legendCounts.put(legendItem.getKey(), matches);
+            legendCounts.put(legendItem.getValue(), matches);
         }
 
         return legendCounts;
@@ -55,10 +55,10 @@ public class ImageUtils {
         // iterate legend to search the corresponding pixel color
         for (var legendItem : legend.entrySet()) {
             // convert hex value to ARGB int
-            int colorToSearch = hexToARGB(legendItem.getValue());
+            int colorToSearch = hexToARGB(legendItem.getKey());
             // if the color matches, return it
             if(colorToSearch == pixelColor){
-                return legendItem.getKey();
+                return legendItem.getValue();
             }
         }
 

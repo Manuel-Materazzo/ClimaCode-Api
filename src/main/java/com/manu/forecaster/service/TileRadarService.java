@@ -34,9 +34,9 @@ public class TileRadarService {
         return tileRadarConfig.getName();
     }
 
-    public List<Nowcast> getForecasts(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {
+    public List<Nowcast> getNowcasts(BigDecimal latitude, BigDecimal longitude) throws IOException, RestException {
 
-        List<Nowcast> forecasts = new ArrayList<>();
+        List<Nowcast> nowcasts = new ArrayList<>();
 
         for (var imagery : tileRadarConfig.getImagery()) {
             // calculate Tile and pixel position within tile
@@ -60,7 +60,7 @@ public class TileRadarService {
             String pointWeather = ImageUtils.getWeatherMatchByColor(weatherRadarTileImage, tileRadarConfig.getLegend(), tile.getXPixel(), tile.getYPixel());
 
             // add to the forecasts list
-            forecasts.add(
+            nowcasts.add(
                     Nowcast.builder()
                             .imageryName(imagery.getName())
                             .pointWeatherCondition(pointWeather)
@@ -69,7 +69,7 @@ public class TileRadarService {
             );
         }
 
-        return forecasts;
+        return nowcasts;
     }
 
     /**
@@ -85,6 +85,8 @@ public class TileRadarService {
      */
     private BufferedImage getImage(String url, String method, Map<String, String> headers, String serializedBody,
                                    String contentType) throws IOException, RestException {
+
+        //TODO: user agent
 
         // create a request body if configured
         RequestBody requestBody = null;

@@ -13,7 +13,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  application.name: forecaster
+  application.name: climacode-api
 
 weather-sources:
   base-map-url: https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png
@@ -39,19 +39,21 @@ weather-sources:
       #       for example the key "timestamp" will search and replace "{timestamp}" on the url/body with value.
       # value: the SpEL expression that gets evaluated and put in the place of key.
       templates:
-        timestamp : ""
+        timestamp : "T(java.time.LocalDateTime).now(T(java.time.ZoneOffset).UTC).minusMinutes(25).withMinute(T(java.lang.Math).min(59, T(java.lang.Math).toIntExact(T(java.lang.Math).round(T(java.time.LocalDateTime).now(T(java.time.ZoneOffset).UTC).minusMinutes(25).getMinute() / 5.0) * 5))).format(T(java.time.format.DateTimeFormatter).ofPattern('yyyyMMdd/yyyyMMdd_HHmm'))"
       legend:
-        storm-4: "#e13d54"
-        storm-3: "#d306e0"
-        storm-2: "#9c1ce0"
-        storm-1: "#6a30e0"
-        storm-0: "#4e3be0"
-        rain-4: "#0c56e0"
-        rain-3: "#0874dc"
-        rain-2: "#0a92d8"
-        rain-1: "#0ca9d4"
-        rain-0: "#0ebdd2"
-        cloudy: "#74dbe5"
+        "#f98000": hail
+        "#e13d54": storm-4
+        "#d306e0": storm-3
+        "#9c1ce0": storm-2
+        "#6a30e0": storm-1
+        "#4e3be0": storm-0
+        "#0c56e0": rain-4
+        "#0874dc": rain-3
+        "#0a92d8": rain-2
+        "#0ca9d4": rain-1
+        "#0ebdd2": rain-0
+        "#74dbe5": cloudy
+
 
   web-scrapers:
     user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"

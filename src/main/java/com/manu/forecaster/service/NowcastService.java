@@ -39,7 +39,7 @@ public class NowcastService {
 
         try {
             for (var tileRadarService : tileRadarServices) {
-                List<Nowcast> nowcast = tileRadarService.getForecasts(new BigDecimal(latitude), new BigDecimal(longitude));
+                List<Nowcast> nowcast = tileRadarService.getNowcasts(new BigDecimal(latitude), new BigDecimal(longitude));
                 NowcastSource nowcastSource = NowcastSource.builder()
                         .sourceName(tileRadarService.getName())
                         .nowcast(nowcast)

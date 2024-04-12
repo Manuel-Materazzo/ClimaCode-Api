@@ -1,4 +1,4 @@
-package com.manu.forecaster.dto;
+package com.manu.forecaster.dto.forecast;
 
 import lombok.*;
 
@@ -12,4 +12,5 @@ import java.time.Instant;
 public class Forecast {
     private Instant date;
     private String weatherCondition;
+    private String weatherDescription;
 }

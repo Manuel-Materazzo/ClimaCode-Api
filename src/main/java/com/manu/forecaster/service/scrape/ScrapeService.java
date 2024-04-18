@@ -45,7 +45,7 @@ public abstract class ScrapeService implements GenericForecastServiceInterface {
 
         WebScraperForecastsConfig configInstance = getWebScraperForecastsConfig(timeframe);
 
-        // if there is no match for the timeframe, nor generic timeframes
+        // if there is no match for the timeframe, nor generic timeframes TODO: only warn and return null?
         if (configInstance == null) {
             String message = String.format("The forecast for the timeframe %s is not defined", timeframe.toString());
             throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, message);

@@ -22,10 +22,13 @@ import java.util.Map;
 @Scope("singleton")
 public class ForecastService {
 
+    private final RestService restService;
+
     List<GenericForecastServiceInterface> forecastServices = new ArrayList<>();
 
     @Autowired
-    ForecastService(WeatherSourcesConfig weatherSourcesConfig) {
+    ForecastService(WeatherSourcesConfig weatherSourcesConfig, RestService restService) {
+        this.restService = restService;
 
         // initialize scrapers
         List<ScrapeService> scrapers = getScrapers(weatherSourcesConfig);
@@ -100,7 +103,7 @@ public class ForecastService {
 
         WebScraperConfig meteocielConfig = weatherSourcesConfig.getWebScrapers().getMeteociel();
         if (meteocielConfig.isEnabled()) {
-            ScrapeService meteocielScraper = new MeteocielScrapeService(userAgent, meteocielConfig);
+            ScrapeService meteocielScraper = new MeteocielScrapeService(restService, userAgent, meteocielConfig);
             scrapeServices.add(meteocielScraper);
         }
 

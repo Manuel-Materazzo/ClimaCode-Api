@@ -10,6 +10,10 @@ import java.util.Map;
 @Setter
 public class WebScraperConfig {
     private boolean enabled;
+    private String geolocationMethod;
+    private String geolocationContentType;
+    private String geolocationUrl;
+    private String geolocationBody;
     private List<WebScraperForecastsConfig> forecasts;
     private Map<String, String> legend;
 }

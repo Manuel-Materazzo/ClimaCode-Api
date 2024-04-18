@@ -83,6 +83,7 @@ weather-sources:
         "[Fog/low stratus clouds]": cloudy
         "[Mixed with some thunderstorm clouds possible]": cloudy
         "[Mixed with few cirrus with some thunderstorm clouds possible]": cloudy
+        "[Mixed with cirrus with some thunderstorm clouds possible]": cloudy
         "[Mixed with cirrus and some thunderstorm clouds possible]": cloudy
         "[Fog/low stratus clouds with few cirrus]": cloudy
         "[Fog/low stratus clouds with cirrus]": cloudy
@@ -105,9 +106,13 @@ weather-sources:
         "[Storm with heavy snow]": storm-3
     meteociel:
       enabled: true
+      geolocation-method: POST
+      geolocation-content-type: application/x-www-form-urlencoded
+      geolocation-url: https://www.meteociel.fr/temps-reel/lieuhelper.php
+      geolocation-body: mode=loc&lon={longitude}&lat={latitude}
       forecasts:
         - name: Forecast GFS
-          url: https://www.meteociel.fr/previsions/xxxxx/xxx.htm
+          url: https://www.meteociel.fr/previsions/{location-id}/forecast.htm
           timeframe: MULTIPLE_DAYS
       legend:
         # the actual value is surrounded with square brakets to preserve spaces and special characters
@@ -119,6 +124,7 @@ weather-sources:
         "[Mitigé]": cloudy #
         "[Nuageux]": cloudy
         "[Couvert]": cloudy #
+        "[Averses de pluie faibles]": rain-0 #
         "[Pluie faible]": rain-0 #
         "[Pluie forte]": rain-1
         "[Pluie]": rain-2

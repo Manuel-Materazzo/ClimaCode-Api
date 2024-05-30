@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Scope("singleton")
@@ -31,6 +31,19 @@ public class NowcastService {
             tileRadarServices.add(trs);
         }
 
+    }
+
+    public byte[] getImage(String latitude, String longitude, String name) {
+        Optional<TileRadarService> optionalService = tileRadarServices.stream().filter(service -> name.contains(service.getName())).findFirst();
+        TileRadarService tileservice = optionalService.orElseThrow();
+        try {
+            BufferedImage image = tileservice.getNowcastImage(new BigDecimal(latitude), new BigDecimal(longitude), name);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", outputStream);
+            return outputStream.toByteArray();
+        } catch (RestException | IOException e) {
+            throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+        }
     }
 
     public RawNowcast getNowcastsRaw(String latitude, String longitude) {

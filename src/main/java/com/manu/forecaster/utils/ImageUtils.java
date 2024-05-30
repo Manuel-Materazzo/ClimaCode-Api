@@ -89,14 +89,22 @@ public class ImageUtils {
      */
     public static BufferedImage overlayImage(BufferedImage baseImage, BufferedImage overlayImage, float opacity) {
 
-        Graphics2D g = baseImage.createGraphics();
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity);
+        // create a new ARGB image, if skipped a jpg baseimage can mess with color channels
+        BufferedImage newBaseImage = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        newBaseImage.getGraphics().drawImage(baseImage, 0, 0, null);
 
-        g.drawImage(overlayImage, 0, 0, null);
+        // create a 2D graphics canvas
+        Graphics2D g = newBaseImage.createGraphics();
+
+        // set the alpha composition to "overlay" the second image
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity);
         g.setComposite(ac);
 
+        // draw the overlay
+        g.drawImage(overlayImage, 0, 0, null);
+
         g.dispose();
-        return baseImage;
+        return newBaseImage;
     }
 
     /**

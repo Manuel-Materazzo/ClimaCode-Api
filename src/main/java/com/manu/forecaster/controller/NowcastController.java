@@ -4,6 +4,7 @@ import com.manu.forecaster.dto.nowcast.RawNowcast;
 import com.manu.forecaster.dto.nowcast.WeatherMatchedNowcast;
 import com.manu.forecaster.service.NowcastService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,13 @@ public class NowcastController {
     public ResponseEntity<WeatherMatchedNowcast> weatherMatch(@RequestParam String latitude, @RequestParam String longitude,
                                                               @RequestParam List<String> weatherTypes) {
         return ResponseEntity.ok(nowcastService.getNowcastsMatch(latitude, longitude, weatherTypes));
+    }
+
+    @GetMapping(path = "/radarImage", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<?> radarImage(@RequestParam String latitude, @RequestParam String longitude,
+                                        @RequestParam String name) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(nowcastService.getImage(latitude, longitude, name));
     }
 
 }

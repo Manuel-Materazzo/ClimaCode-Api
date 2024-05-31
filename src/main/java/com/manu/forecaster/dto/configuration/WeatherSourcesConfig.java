@@ -13,6 +13,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "weather-sources")
 public class WeatherSourcesConfig {
     private String baseMapUrl;
+    private int baseMapZoomLevel;
     private String userAgent;
     private List<TileRadarConfig> tileRadars;
     private WebScrapersConfig webScrapers;

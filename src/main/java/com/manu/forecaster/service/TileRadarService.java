@@ -2,8 +2,10 @@ package com.manu.forecaster.service;
 
 import com.manu.forecaster.dto.configuration.TileRadarImageryConfig;
 import com.manu.forecaster.dto.nowcast.Nowcast;
+import com.manu.forecaster.dto.tile.TileBoundary;
 import com.manu.forecaster.dto.tile.TileRapresentation;
 import com.manu.forecaster.dto.configuration.TileRadarConfig;
+import com.manu.forecaster.exception.ConfigurationException;
 import com.manu.forecaster.exception.RestException;
 import com.manu.forecaster.utils.ImageUtils;
 import com.manu.forecaster.utils.TileUtils;
@@ -21,12 +23,15 @@ public class TileRadarService {
     private final RestService restService;
     private final SpelService spelService;
     private final String baseMapUrl;
+    private final int baseMapZoomLevel;
 
-    public TileRadarService(TileRadarConfig tileRadarConfig, RestService restService, SpelService spelService, String baseMapUrl) {
+    public TileRadarService(TileRadarConfig tileRadarConfig, RestService restService, SpelService spelService,
+                            int baseMapZoomLevel, String baseMapUrl) {
         this.tileRadarConfig = tileRadarConfig;
         this.restService = restService;
         this.spelService = spelService;
         this.baseMapUrl = baseMapUrl;
+        this.baseMapZoomLevel = baseMapZoomLevel;
     }
 
     public String getName() {
@@ -69,35 +74,53 @@ public class TileRadarService {
 
     /**
      * Gets the highlighted nowcast image from the radar
+     *
      * @param latitude
      * @param longitude
-     * @param name name of the imagery of the radar
+     * @param name      name of the imagery of the radar
      * @return a bufferedImage containing radar image overlayed on the base map
      * @throws IOException
      * @throws RestException
      */
     public BufferedImage getNowcastImage(BigDecimal latitude, BigDecimal longitude, String name) throws IOException, RestException {
+
+        // the radar can't be more accurate than the base map.
+        if (tileRadarConfig.getZoomLevel() > baseMapZoomLevel) {
+            throw new ConfigurationException("The tile radar zoom level is greater than the base map zoom level");
+        }
+
+        // search the correct imagery config
         Optional<TileRadarImageryConfig> optionalImagery = tileRadarConfig.getImagery().stream().filter(service -> name.contains(service.getName())).findFirst();
         TileRadarImageryConfig imagery = optionalImagery.orElseThrow();
 
         // calculate Tiles and pixel position within tile
         TileRapresentation weatherRadarTile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel(), 512);
-        TileRapresentation baseMapTile = TileUtils.latlongToTile(latitude, longitude, 6, 512);
+        TileRapresentation baseMapTile = TileUtils.latlongToTile(latitude, longitude, baseMapZoomLevel, 512);
 
         // get weather radar tile image
         BufferedImage weatherRadarTileImage = getImage(
                 imagery.getUrl(), imagery.getMethod(), tileRadarConfig.getHeaders(), imagery.getBody(), imagery.getBodyContentType(), weatherRadarTile
         );
 
+        // if the zoom level is not the same
+        if (baseMapZoomLevel != tileRadarConfig.getZoomLevel()) {
+            // crop the weather radar image to extract only the portion covered by the base map tile
+            // and scale it back to the original size
+            weatherRadarTileImage = zoomTileImagery(weatherRadarTileImage, weatherRadarTile, baseMapTile, 512);
+        }
+
         // get base map tile image
         BufferedImage baseMapImage = getImage(
                 baseMapUrl, "GET", new HashMap<>(), null, null, baseMapTile
         );
 
-        BufferedImage overlayedImage = ImageUtils.overlayImage(baseMapImage, weatherRadarTileImage, 0.7f);
+        // overlay the weather radar image on top of the base map
+        BufferedImage overlayedImage = ImageUtils.overlayImage(baseMapImage, weatherRadarTileImage, tileRadarConfig.getOpacity());
 
-        // TODO: rescale radius for the 9 zoom level
-        return ImageUtils.drawSquare(overlayedImage, baseMapTile.getXPixel(), baseMapTile.getYPixel(), 5);
+        // scale difference between the base map and the tile radar
+        int scale = (int) Math.pow(2, (double) baseMapZoomLevel - tileRadarConfig.getZoomLevel());
+
+        return ImageUtils.drawSquare(overlayedImage, baseMapTile.getXPixel(), baseMapTile.getYPixel(), 5 * scale);
     }
 
     /**
@@ -144,6 +167,41 @@ public class TileRadarService {
             InputStream inputStream = responseBody.byteStream();
             return ImageIO.read(inputStream);
         }
+    }
+
+    /**
+     * Given an imagery of a tile, crops and scales it to match the targetTile
+     *
+     * @param tileImagery the imagery to crop and scale in order to zoom-in
+     * @param tile        the tile corresponding to the imagery
+     * @param targetTile  a smaller tileRapresentation contained within the imagery, target of the zoom operation
+     */
+    private BufferedImage zoomTileImagery(BufferedImage tileImagery, TileRapresentation tile, TileRapresentation targetTile, int tilePixelSize) {
+
+        // scale difference between representations
+        int scale = (int) Math.pow(2, (double) targetTile.getZ() - tile.getZ());
+
+        // extract lat long of target tile's corners for readability
+        BigDecimal topLeftLatitude = targetTile.getTopLeftCorner().getLatitude();
+        BigDecimal topLeftLongitude = targetTile.getTopLeftCorner().getLongitude();
+        BigDecimal bottomRightLatitude = targetTile.getBottomRightCorner().getLatitude();
+        BigDecimal bottomRightLongitude = targetTile.getBottomRightCorner().getLongitude();
+
+        // targetTile is always contained inside the tile of the imagery.
+        // the objective here is to identify the portion of the imagery that represents targetTile.
+        // as such, we need to find the pixel index (xy) of each targetTile's corner inside of the imagery.
+
+        // Calculate each corner tile representation.
+        // this will result in a "recalculation" of the tile that represents the imagery 2 times,
+        // but with the pixel index values (xPixel, yPixel) corresponding to targetTile's corner.
+        TileRapresentation topLeftTile = TileUtils.latlongToTile(topLeftLatitude, topLeftLongitude, tile.getZ(), tilePixelSize);
+        TileRapresentation bottomRightTile = TileUtils.latlongToTile(bottomRightLatitude, bottomRightLongitude, tile.getZ(), tilePixelSize);
+
+        // Create the cropping boundary
+        TileBoundary tileBoundary = TileUtils.getBoundaries(tileImagery.getWidth(), tileImagery.getHeight(), tile, topLeftTile, bottomRightTile);
+
+        // do magic
+        return ImageUtils.cropAndScale(tileImagery, tileBoundary, scale);
     }
 
 }

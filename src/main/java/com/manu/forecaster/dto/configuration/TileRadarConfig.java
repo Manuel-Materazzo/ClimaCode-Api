@@ -13,6 +13,7 @@ public class TileRadarConfig {
     private String name;
     private List<TileRadarImageryConfig> imagery;
     private int zoomLevel;
+    private float opacity;
     private Map<String, String> templates;
     private Map<String, String> headers;
     private Map<String, String> legend;

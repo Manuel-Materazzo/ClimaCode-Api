@@ -27,7 +27,9 @@ public class NowcastService {
     NowcastService(WeatherSourcesConfig weatherSourcesConfig, RestService restService, SpelService spelService) {
         // initialize tile radars
         for (var tileradar : weatherSourcesConfig.getTileRadars()) {
-            TileRadarService trs = new TileRadarService(tileradar, restService, spelService, weatherSourcesConfig.getBaseMapUrl());
+            TileRadarService trs = new TileRadarService(
+                    tileradar, restService, spelService, weatherSourcesConfig.getBaseMapZoomLevel(), weatherSourcesConfig.getBaseMapUrl()
+            );
             tileRadarServices.add(trs);
         }
 

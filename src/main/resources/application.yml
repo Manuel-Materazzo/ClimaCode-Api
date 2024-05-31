@@ -17,6 +17,7 @@ spring:
 
 weather-sources:
   base-map-url: https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png
+  base-map-zoom-level: 9 # The "z" part of the base tile, bigger zoom = smaller area. Must be equal or greater than any tile radar zoom-level.
   user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
   tile-radars:
     - name: xxx Radar
@@ -32,6 +33,7 @@ weather-sources:
           body: ""
           body-content-type: ""
       zoom-level: 6 # The "z" part of the tile to retrieve, bigger = more accurate
+      opacity: 0.7 # The opacity to use when this tile will be drawn on top of the base map 0=transparent, 1=opaque 
       headers:
         referer: "https://www.xxx.com/"
       # templates it's a key-value list of SpEL expressions that get evaluated and replaced on the url and body.

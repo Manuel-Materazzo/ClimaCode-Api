@@ -24,17 +24,19 @@ public class TileRadarService {
     private final RestService restService;
     private final SpelService spelService;
     private final String baseMapUrl;
+    private final String userAgent;
     private final int baseMapZoomLevel;
     private final int baseMapSize;
 
     public TileRadarService(TileRadarConfig tileRadarConfig, RestService restService, SpelService spelService,
-                            int baseMapZoomLevel, int baseMapSize, String baseMapUrl) {
+                            int baseMapZoomLevel, int baseMapSize, String baseMapUrl, String userAgent) {
         this.tileRadarConfig = tileRadarConfig;
         this.restService = restService;
         this.spelService = spelService;
         this.baseMapUrl = baseMapUrl;
         this.baseMapZoomLevel = baseMapZoomLevel;
         this.baseMapSize = baseMapSize;
+        this.userAgent = userAgent;
     }
 
     public String getName() {
@@ -159,8 +161,6 @@ public class TileRadarService {
     private BufferedImage getImage(String url, String method, Map<String, String> headers, String serializedBody,
                                    String contentType, TileRapresentation tile) throws IOException, RestException {
 
-        //TODO: user agent
-
         // apply url and body templates
         String finalUrl = spelService.applyTemplates(url, tileRadarConfig.getTemplates(), tile);
         String finalBody = spelService.applyTemplates(serializedBody, tileRadarConfig.getTemplates(), tile);
@@ -172,6 +172,9 @@ public class TileRadarService {
                     MediaType.parse(contentType), finalBody
             );
         }
+
+        // add user agent to headers
+        headers.put("User-Agent", userAgent);
 
         Headers requestHeaders = Headers.of(headers);
 

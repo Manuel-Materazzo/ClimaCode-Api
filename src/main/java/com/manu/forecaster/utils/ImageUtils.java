@@ -16,10 +16,11 @@ public class ImageUtils {
 
     /**
      * Extracts how many pixel in the source image within the search radius match the colors described in the legend
-     * @param image source image for the match
-     * @param legend map of names and hex colors to match
-     * @param x x pixel of the search point
-     * @param y y pixel of the search point
+     *
+     * @param image        source image for the match
+     * @param legend       map of names and hex colors to match
+     * @param x            x pixel of the search point
+     * @param y            y pixel of the search point
      * @param searchRadius pixels of search radius
      * @return a map containing the names of the legend, and the amount of matched pixels
      */
@@ -57,7 +58,7 @@ public class ImageUtils {
             // convert hex value to ARGB int
             int colorToSearch = hexToARGB(legendItem.getKey());
             // if the color matches, return it
-            if(colorToSearch == pixelColor){
+            if (colorToSearch == pixelColor) {
                 return legendItem.getValue();
             }
         }
@@ -82,9 +83,10 @@ public class ImageUtils {
 
     /**
      * Sets the opacity of the overlayImage to the value provided and draws it on top of the baseImage
-     * @param baseImage image at full opacity
+     *
+     * @param baseImage    image at full opacity
      * @param overlayImage image with reduced opacity to overlay
-     * @param opacity opacity of overlayImage
+     * @param opacity      opacity of overlayImage
      * @return BufferedImage of overlapped images
      */
     public static BufferedImage overlayImage(BufferedImage baseImage, BufferedImage overlayImage, float opacity) {
@@ -109,21 +111,26 @@ public class ImageUtils {
 
     /**
      * Crops the source image to the provided boundary and scales is
-     * @param source image to crop
+     *
+     * @param source   image to crop
      * @param boundary boundaries for crop
-     * @param scale scale of the output image
+     * @param scale    scale of the output image
      * @return the source image, cropped and scaled
      */
-    public BufferedImage cropAndScale(BufferedImage source, TileBoundary boundary, double scale) {
+    public static BufferedImage cropAndScale(BufferedImage source, TileBoundary boundary, double scale) {
 
         int width = boundary.getBottomRightXPixel() - boundary.getTopLeftXPixel();
         int height = boundary.getBottomRightYPixel() - boundary.getTopLeftYPixel();
 
-        // crop
+        // calculate the resampled image size
+        int scaledWidth = (int) (width * scale);
+        int scaledHeigth = (int) (height * scale);
+
+        // crop the image
         BufferedImage cropped = source.getSubimage(boundary.getTopLeftXPixel(), boundary.getTopLeftYPixel(), width, height);
 
-        // scale
-        BufferedImage after = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        // scale the image by resampling with bilinear filter
+        BufferedImage after = new BufferedImage(scaledWidth, scaledHeigth, BufferedImage.TYPE_INT_ARGB);
         AffineTransform at = new AffineTransform();
         at.scale(scale, scale);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);

@@ -1,6 +1,7 @@
 package com.manu.forecaster.utils;
 
 import com.manu.forecaster.dto.tile.Coordinate;
+import com.manu.forecaster.dto.tile.TileBoundary;
 import com.manu.forecaster.dto.tile.TileRapresentation;
 
 import java.math.BigDecimal;
@@ -13,9 +14,9 @@ public class TileUtils {
     /**
      * Gets the WMS TileRapresentation of a given latitude and longitude with a certain zoom level
      *
-     * @param latitude latitude of the point within the tile to extract
+     * @param latitude  latitude of the point within the tile to extract
      * @param longitude longitude of the point within the tile to extract
-     * @param zoom zoom level (z) of the tile to extract
+     * @param zoom      zoom level (z) of the tile to extract
      * @return a complete TileRapresentation, containing all the tile data and the pixel index of the requested point
      */
     public static TileRapresentation latlongToTile(BigDecimal latitude, BigDecimal longitude, int zoom, int tileSize) {
@@ -48,7 +49,56 @@ public class TileUtils {
     }
 
     /**
+     * Generates a TileBoundary object representing the crop boundaries of a smaller tile within the originalTile.
+     * Basically just slaps the top-left and bottom-right corner pixel indexes into an object,
+     * but it also takes in account the case when pixel indexes are at the start of a different tile.
+     *
+     * @param width           the pixel width of the bigger tile
+     * @param heigth          the pixel heigth of the bigger tile
+     * @param originalTile    the tile metadata of the imagery
+     * @param topLeftTile     the topLeft corner of the smaller tile, and the crop boundary
+     * @param bottomRightTile the bottomRight corner of the smaller tile, and the crop boundary
+     * @return a TileBoundary containing the corrected corners pixel indexes
+     */
+    public static TileBoundary getBoundaries(int width, int heigth, TileRapresentation originalTile,
+                                             TileRapresentation topLeftTile, TileRapresentation bottomRightTile) {
+        int topLeftXPixel = topLeftTile.getXPixel();
+        int topLeftYPixel = topLeftTile.getYPixel();
+        int bottomRightXPixel = bottomRightTile.getXPixel();
+        int bottomRightYPixel = bottomRightTile.getYPixel();
+
+        // correct pixels value if the top left corner touches the left border
+        if (topLeftTile.getX() < originalTile.getX()) {
+            topLeftXPixel = 0;
+        }
+
+        // correct pixels value if the bottom right corner touches the right border
+        if (bottomRightTile.getX() > originalTile.getX()) {
+            bottomRightXPixel = width;
+        }
+
+        // correct pixels value if the top left corner touches the top border
+        if (topLeftTile.getY() < originalTile.getY()) {
+            topLeftYPixel = 0;
+        }
+
+        // correct pixels value if the bottom right corner touches the bottom border
+        if (bottomRightTile.getY() > originalTile.getY()) {
+            bottomRightYPixel = heigth;
+        }
+
+
+        return TileBoundary.builder()
+                .bottomRightXPixel(bottomRightXPixel)
+                .bottomRightYPixel(bottomRightYPixel)
+                .topLeftXPixel(topLeftXPixel)
+                .topLeftYPixel(topLeftYPixel)
+                .build();
+    }
+
+    /**
      * Computes a partial TileRapresentation containing only the corners coordinate of the given xyz tile
+     *
      * @param x x of the tile
      * @param y y of the tile
      * @param z z of the tile
@@ -84,4 +134,6 @@ public class TileUtils {
                 .bottomRightCorner(bottomRightCorner)
                 .build();
     }
+
+
 }

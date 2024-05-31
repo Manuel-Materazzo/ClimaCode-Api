@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.List;
 
 public class TileRadarService {
 
@@ -24,14 +25,16 @@ public class TileRadarService {
     private final SpelService spelService;
     private final String baseMapUrl;
     private final int baseMapZoomLevel;
+    private final int baseMapSize;
 
     public TileRadarService(TileRadarConfig tileRadarConfig, RestService restService, SpelService spelService,
-                            int baseMapZoomLevel, String baseMapUrl) {
+                            int baseMapZoomLevel, int baseMapSize, String baseMapUrl) {
         this.tileRadarConfig = tileRadarConfig;
         this.restService = restService;
         this.spelService = spelService;
         this.baseMapUrl = baseMapUrl;
         this.baseMapZoomLevel = baseMapZoomLevel;
+        this.baseMapSize = baseMapSize;
     }
 
     public String getName() {
@@ -44,7 +47,7 @@ public class TileRadarService {
 
         for (var imagery : tileRadarConfig.getImagery()) {
             // calculate Tile and pixel position within tile
-            TileRapresentation tile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel(), 512);
+            TileRapresentation tile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel(), tileRadarConfig.getSize());
 
             // get weather radar tile image
             BufferedImage weatherRadarTileImage = getImage(
@@ -53,6 +56,7 @@ public class TileRadarService {
 
             // get how many pixels around the point of interest have matching colors with the legend
             // pro tip: using a 5px search radius, we search on 100px, so you can read the pixel number as a coverage %
+            //TODO: dynamic area radius
             Map<String, Integer> forecast = ImageUtils.getColorMatchCount(
                     weatherRadarTileImage, tileRadarConfig.getLegend(), tile.getXPixel(), tile.getYPixel(), 5
             );
@@ -75,8 +79,8 @@ public class TileRadarService {
     /**
      * Gets the highlighted nowcast image from the radar
      *
-     * @param latitude
-     * @param longitude
+     * @param latitude  latitude of the point to nowcast
+     * @param longitude latitude of the point to nowcast
      * @param name      name of the imagery of the radar
      * @return a bufferedImage containing radar image overlayed on the base map
      * @throws IOException
@@ -84,7 +88,7 @@ public class TileRadarService {
      */
     public BufferedImage getNowcastImage(BigDecimal latitude, BigDecimal longitude, String name) throws IOException, RestException {
 
-        // the radar can't be more accurate than the base map.
+        // the radar can't cover a smaller area than the base map.
         if (tileRadarConfig.getZoomLevel() > baseMapZoomLevel) {
             throw new ConfigurationException("The tile radar zoom level is greater than the base map zoom level");
         }
@@ -94,19 +98,32 @@ public class TileRadarService {
         TileRadarImageryConfig imagery = optionalImagery.orElseThrow();
 
         // calculate Tiles and pixel position within tile
-        TileRapresentation weatherRadarTile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel(), 512);
-        TileRapresentation baseMapTile = TileUtils.latlongToTile(latitude, longitude, baseMapZoomLevel, 512);
+        TileRapresentation weatherRadarTile = TileUtils.latlongToTile(latitude, longitude, tileRadarConfig.getZoomLevel(), tileRadarConfig.getSize());
+        TileRapresentation baseMapTile = TileUtils.latlongToTile(latitude, longitude, baseMapZoomLevel, baseMapSize);
 
         // get weather radar tile image
         BufferedImage weatherRadarTileImage = getImage(
                 imagery.getUrl(), imagery.getMethod(), tileRadarConfig.getHeaders(), imagery.getBody(), imagery.getBodyContentType(), weatherRadarTile
         );
 
+        // set the default scale to 1, used later to scale the drawn square
+        double scale = 1;
+
+        // if the basemap image and the tile radar image are different in size
+        if (baseMapSize != tileRadarConfig.getSize()) {
+            // update the imagery scale
+            scale = (double) baseMapSize / tileRadarConfig.getSize();
+            // resize the tile radar image to match the basemap
+            weatherRadarTileImage = ImageUtils.scale(weatherRadarTileImage, scale);
+        }
+
         // if the zoom level is not the same
         if (baseMapZoomLevel != tileRadarConfig.getZoomLevel()) {
             // crop the weather radar image to extract only the portion covered by the base map tile
             // and scale it back to the original size
-            weatherRadarTileImage = zoomTileImagery(weatherRadarTileImage, weatherRadarTile, baseMapTile, 512);
+            weatherRadarTileImage = zoomTileImagery(weatherRadarTileImage, weatherRadarTile, baseMapTile, baseMapSize);
+            // account for the zoom level change on the scale
+            scale = scale * Math.pow(2, (double) baseMapZoomLevel - tileRadarConfig.getZoomLevel());
         }
 
         // get base map tile image
@@ -117,10 +134,8 @@ public class TileRadarService {
         // overlay the weather radar image on top of the base map
         BufferedImage overlayedImage = ImageUtils.overlayImage(baseMapImage, weatherRadarTileImage, tileRadarConfig.getOpacity());
 
-        // scale difference between the base map and the tile radar
-        int scale = (int) Math.pow(2, (double) baseMapZoomLevel - tileRadarConfig.getZoomLevel());
-
-        return ImageUtils.drawSquare(overlayedImage, baseMapTile.getXPixel(), baseMapTile.getYPixel(), 5 * scale);
+        //TODO: dynamic area radius
+        return ImageUtils.drawSquare(overlayedImage, baseMapTile.getXPixel(), baseMapTile.getYPixel(), (int) (5 * scale));
     }
 
     /**

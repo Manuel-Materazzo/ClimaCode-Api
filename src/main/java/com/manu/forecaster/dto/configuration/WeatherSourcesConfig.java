@@ -14,6 +14,7 @@ import java.util.List;
 public class WeatherSourcesConfig {
     private String baseMapUrl;
     private int baseMapZoomLevel;
+    private int baseMapSize;
     private String userAgent;
     private List<TileRadarConfig> tileRadars;
     private WebScrapersConfig webScrapers;

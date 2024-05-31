@@ -137,6 +137,27 @@ public class ImageUtils {
         return scaleOp.filter(cropped, after);
     }
 
+    /**
+     * Scales the provided image
+     *
+     * @param source   image to crop
+     * @param scale    scale of the output image
+     * @return the source image scaled
+     */
+    public static BufferedImage scale(BufferedImage source, double scale) {
+
+        // calculate the resampled image size
+        int scaledWidth = (int) (source.getWidth() * scale);
+        int scaledHeigth = (int) (source.getHeight() * scale);
+
+        // scale the image by resampling with bilinear filter
+        BufferedImage after = new BufferedImage(scaledWidth, scaledHeigth, BufferedImage.TYPE_INT_ARGB);
+        AffineTransform at = new AffineTransform();
+        at.scale(scale, scale);
+        AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+        return scaleOp.filter(source, after);
+    }
+
     private static int hexToARGB(String hexColor) {
 
         // remove # to get only the hex

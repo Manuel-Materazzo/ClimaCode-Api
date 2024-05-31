@@ -14,6 +14,7 @@ public class TileRadarConfig {
     private List<TileRadarImageryConfig> imagery;
     private int zoomLevel;
     private float opacity;
+    private int size;
     private Map<String, String> templates;
     private Map<String, String> headers;
     private Map<String, String> legend;

@@ -13,4 +13,6 @@ public class TileRapresentation {
     private int z;
     private int xPixel;
     private int yPixel;
+    private Coordinate topLeftCorner;
+    private Coordinate bottomRightCorner;
 }

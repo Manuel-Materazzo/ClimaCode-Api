@@ -33,6 +33,8 @@ public class ImageUtils {
         int[] pixelColors = image.getRGB(startx, starty, size, size, null, 0, size);
         List<Integer> pixelColorsList = Arrays.stream(pixelColors).boxed().toList();
 
+        int totalPixels = size * size;
+
         Map<String, Integer> legendCounts = new HashMap<>();
 
         // iterate legend and count how many pixels there are with the same color as each legend entry
@@ -41,8 +43,10 @@ public class ImageUtils {
             int colorToSearch = hexToARGB(legendItem.getKey());
             // count the color matches into the pixel array
             int matches = Collections.frequency(pixelColorsList, colorToSearch);
-            // save the counts for each legend entry on another map
-            legendCounts.put(legendItem.getValue(), matches);
+            // calculate the coverage% of the legend entry
+            int coverage = 100 * matches / totalPixels;
+            // save the coverage% for each legend entry on another map
+            legendCounts.put(legendItem.getValue(), coverage);
         }
 
         return legendCounts;

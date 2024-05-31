@@ -36,6 +36,7 @@ weather-sources:
       zoom-level: 6 # The "z" part of the tile to retrieve, bigger = more accurate
       opacity: 0.7 # The opacity to use when this tile will be drawn on top of the base map 0=transparent, 1=opaque
       size: 512 # The pixel size of the radar tile image, with the assumption that tiles are squares
+      pixel-tolerance-radius: 5 # When someone requests the nowcast for a coordinate, this is the radius around the coordinate's pixel on the radar image checked for "areaMatch"
       headers:
         referer: "https://www.xxx.com/"
       # templates it's a key-value list of SpEL expressions that get evaluated and replaced on the url and body.

@@ -15,6 +15,7 @@ public class TileRadarConfig {
     private int zoomLevel;
     private float opacity;
     private int size;
+    private int pixelToleranceRadius;
     private Map<String, String> templates;
     private Map<String, String> headers;
     private Map<String, String> legend;

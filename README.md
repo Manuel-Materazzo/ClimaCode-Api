@@ -57,13 +57,13 @@ The API is designed to provide accurate and timely weather information for speci
 
 The `application.yml` file is used to configure weather sources, web scrapers, and other application settings.
 
-Please refer to the documentation or read comments on the `application.yml` file for details on how to configure additional weather radars and scrapers.
+Please refer to the [Configuration documentation](https://github.com/Manuel-Materazzo/ClimaCode-Api/wiki/Configuration) or read comments on the `application.yml` file for details on how to configure additional weather radars and scrapers.
 
 ---
 
 ## Usage
 
-Please refer to the API documentation for details of each endpoint.
+Please refer to the  [API documentation](https://github.com/Manuel-Materazzo/ClimaCode-Api/wiki/API-endpoints) for details of each endpoint.
 
 Once the application is running, you can find the interactive OpenApi Documentation at:
 - Swagger UI: [http://localhost:8080/api/swagger](http://localhost:8080/api/swagger)

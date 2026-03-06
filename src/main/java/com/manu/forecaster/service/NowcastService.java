@@ -39,7 +39,7 @@ public class NowcastService {
 
     public byte[] getImage(String latitude, String longitude, String name) {
         Optional<TileRadarService> optionalService = tileRadarServices.stream().filter(service -> name.contains(service.getName())).findFirst();
-        TileRadarService tileservice = optionalService.orElseThrow();
+        TileRadarService tileservice = optionalService.orElseThrow(() -> new java.util.NoSuchElementException("No tile radar service found matching name: " + name));
         try {
             BufferedImage image = tileservice.getNowcastImage(new BigDecimal(latitude), new BigDecimal(longitude), name);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

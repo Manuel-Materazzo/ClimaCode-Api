@@ -99,7 +99,7 @@ public class TileRadarService {
                 .stream()
                 .filter(service -> name.contains(service.getName()))
                 .findFirst();
-        TileRadarImageryConfig imagery = optionalImagery.orElseThrow();
+        TileRadarImageryConfig imagery = optionalImagery.orElseThrow(() -> new java.util.NoSuchElementException("No imagery found matching name: " + name));
 
         // calculate Tiles and pixel position within tile
         TileRapresentation weatherRadarTile = TileUtils.latlongToTile(

@@ -110,7 +110,6 @@ public class MeteocielScrapeService extends ScrapeService {
             locationId = bodyString.split("\\|")[1];
 
         } catch (IOException | RestException e) {
-            e.printStackTrace();
             String message = String.format("Unable to get locationId from geolocation service: %s", e.getMessage());
             throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, message);
         }

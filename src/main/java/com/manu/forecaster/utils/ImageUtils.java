@@ -26,14 +26,17 @@ public class ImageUtils {
      */
     public static Map<String, Integer> getColorMatchCount(BufferedImage image, Map<String, String> legend, int x, int y, int searchRadius) {
 
-        // extract an RGB array
-        int size = searchRadius * 2;
-        int startx = x - searchRadius;
-        int starty = y - searchRadius;
-        int[] pixelColors = image.getRGB(startx, starty, size, size, null, 0, size);
+        // extract an RGB array, clamped to image bounds
+        int startx = Math.max(0, x - searchRadius);
+        int starty = Math.max(0, y - searchRadius);
+        int endx = Math.min(image.getWidth(), x + searchRadius);
+        int endy = Math.min(image.getHeight(), y + searchRadius);
+        int width = endx - startx;
+        int height = endy - starty;
+        int[] pixelColors = image.getRGB(startx, starty, width, height, null, 0, width);
         List<Integer> pixelColorsList = Arrays.stream(pixelColors).boxed().toList();
 
-        int totalPixels = size * size;
+        int totalPixels = width * height;
 
         Map<String, Integer> legendCounts = new HashMap<>();
 

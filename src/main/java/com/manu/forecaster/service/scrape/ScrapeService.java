@@ -33,6 +33,7 @@ public abstract class ScrapeService implements GenericForecastServiceInterface {
         try {
             document = Jsoup.connect(url)
                     .userAgent(userAgent)
+                    .timeout(30000)
                     .get();
         } catch (IOException e) {
             throw new GeneralDataException(HttpStatus.EXPECTATION_FAILED, e.getMessage());

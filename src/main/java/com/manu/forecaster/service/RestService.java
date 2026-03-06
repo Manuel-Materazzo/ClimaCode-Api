@@ -13,18 +13,23 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RestService {
 
-    private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();
+    private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .build();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public RestService() {
         MAPPER.registerModule(new JavaTimeModule());
     }
 
-    public synchronized Response executeRequest(Request request) throws IOException {
+    public Response executeRequest(Request request) throws IOException {
         return CLIENT.newCall(request).execute();
     }
 

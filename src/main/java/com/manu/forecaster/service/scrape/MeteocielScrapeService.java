@@ -107,7 +107,11 @@ public class MeteocielScrapeService extends ScrapeService {
             var responseBody = restService.validateResponse(res);
             // extract the location id from the response (location name|location id|some number)
             var bodyString = responseBody.string();
-            locationId = bodyString.split("\\|")[1];
+            String[] parts = bodyString.split("\\|");
+            if (parts.length < 2) {
+                throw new RestException("Unexpected geolocation response format: " + bodyString);
+            }
+            locationId = parts[1];
 
         } catch (IOException | RestException e) {
             String message = String.format("Unable to get locationId from geolocation service: %s", e.getMessage());

@@ -173,10 +173,11 @@ public class TileRadarService {
             );
         }
 
-        // add user agent to headers
-        headers.put("User-Agent", userAgent);
+        // add user agent to a defensive copy of headers
+        Map<String, String> requestHeadersMap = new HashMap<>(headers);
+        requestHeadersMap.put("User-Agent", userAgent);
 
-        Headers requestHeaders = Headers.of(headers);
+        Headers requestHeaders = Headers.of(requestHeadersMap);
 
         Request request = new Request.Builder()
                 .url(finalUrl)

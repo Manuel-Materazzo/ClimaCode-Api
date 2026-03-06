@@ -1,7 +1,6 @@
 package com.manu.forecaster.service;
 
 import com.manu.forecaster.dto.tile.TileRapresentation;
-import org.springframework.context.annotation.Scope;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-@Scope("singleton")
 public class SpelService {
 
     private final ExpressionParser parser = new SpelExpressionParser();

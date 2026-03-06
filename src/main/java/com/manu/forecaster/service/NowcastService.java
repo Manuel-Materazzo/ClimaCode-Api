@@ -6,7 +6,6 @@ import com.manu.forecaster.exception.GeneralDataException;
 import com.manu.forecaster.exception.RestException;
 import com.manu.forecaster.utils.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Service
-@Scope("singleton")
 public class NowcastService {
 
     private final List<TileRadarService> tileRadarServices = new ArrayList<>();

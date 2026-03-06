@@ -8,7 +8,6 @@ import com.manu.forecaster.service.scrape.MeteblueScrapeService;
 import com.manu.forecaster.service.scrape.MeteocielScrapeService;
 import com.manu.forecaster.service.scrape.ScrapeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -19,12 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Scope("singleton")
 public class ForecastService {
 
     private final RestService restService;
 
-    List<GenericForecastServiceInterface> forecastServices = new ArrayList<>();
+    private final List<GenericForecastServiceInterface> forecastServices = new ArrayList<>();
 
     @Autowired
     ForecastService(WeatherSourcesConfig weatherSourcesConfig, RestService restService) {

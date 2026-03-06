@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @Service
-@Scope("singleton")
 public class RestService {
 
     private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();

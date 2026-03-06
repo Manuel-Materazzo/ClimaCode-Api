@@ -1,0 +1,15 @@
+services:
+  climacode-api:
+    container_name: climacode-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    read_only: true
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp
+    ports:
+      - '8080:8080'

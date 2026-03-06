@@ -66,7 +66,7 @@ public class ForecastService {
                 // iterate the weather types to check
                 for (var weatherType : weatherTypes) {
                     // if the weather types are contained inside the forecast
-                    if (forecast.getWeatherCondition().contains(weatherType)) {
+                    if (forecast.getWeatherCondition() != null && forecast.getWeatherCondition().contains(weatherType)) {
                         // add set match into the map
                         var match = matches.get(weatherType);
                         match.setMatched(true);

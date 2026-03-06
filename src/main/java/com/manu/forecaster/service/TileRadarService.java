@@ -190,7 +190,11 @@ public class TileRadarService {
 
             // get image from body
             InputStream inputStream = responseBody.byteStream();
-            return ImageIO.read(inputStream);
+            BufferedImage image = ImageIO.read(inputStream);
+            if (image == null) {
+                throw new RestException("The remote server returned an invalid or empty image");
+            }
+            return image;
         }
     }
 

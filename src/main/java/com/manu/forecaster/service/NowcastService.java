@@ -91,7 +91,7 @@ public class NowcastService {
                         String matchName = String.format("%s - %s", source.getSourceName(), nowcast.getImageryName());
                         match.getMatchedForecasts().add(matchName);
                         // if the point weather matches the weather type, it's a point match
-                        if (nowcast.getPointWeatherCondition().contains(weatherType)) {
+                        if (nowcast.getPointWeatherCondition() != null && nowcast.getPointWeatherCondition().contains(weatherType)) {
                             match.setPointMatched(true);
                         }
                     }

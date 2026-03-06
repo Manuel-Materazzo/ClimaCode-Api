@@ -36,7 +36,7 @@ public class RestService {
      */
     public void validateResponse(HttpRequest request, HttpResponse<String> response) throws RestException {
         // Check that the response uri is the same as the request uri
-        if (response.uri() != request.uri()) {
+        if (!response.uri().equals(request.uri())) {
             String message = "The remote server responded from a different uri than expected";
             throw new RestException(message);
         }

@@ -16,13 +16,15 @@
 	<properties>
 		<java.version>21</java.version>
 		<lombok.version>1.18.36</lombok.version>
+		<!-- fix vulnerability on spring-boot-starter-security -->
+		<logback.version>1.5.32</logback.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-security</artifactId>
+			</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -82,6 +84,35 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Security fixes -->
+		<!-- spring-boot-starter-web -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.21.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>11.0.18</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- spring-security-test -->
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.27.7</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- springdoc-openapi-starter-webmvc-ui -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.20.0</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
